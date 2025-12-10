@@ -1,5 +1,6 @@
 // ========================================================
-// File description: Checks if user is Admin
+// File description: Checks if user is Admin, and
+// displays error message if not.
 // ========================================================
 
 // Ensures current user is an Admin
