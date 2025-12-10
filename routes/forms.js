@@ -57,9 +57,9 @@ router.get('/forms', async (req, res) => {
 router.post('/forms', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
-        const { name, url, requirement, contact, type } = req.body;
+        const { Form_Name, Form_URL, requires_staff, staff_contact_id, Form_Target_User_Type } = req.body;
         // Input validation
-        if (!name || name.trim() === "" || !url || url.trim() == "") {
+        if (!Form_Name || Form_Name.trim() === "" || !Form_URL || Form_URL.trim() == "") {
             return res.status(400).json({ error: "Missing or empty question, answer, or category" });
         }
         connection = await db.getConnection();
@@ -67,9 +67,9 @@ router.post('/forms', authenticate, requireAdmin, async (req, res) => {
         const result = await connection.query(
             `INSERT INTO Forms (Form_Name, Form_URL, requires_staff, staff_contact_id, Form_Target_User_Type)
             VALUES (?, ?, ?, ?, ?)`,
-            [name, url, requirement, contact, type]
+            [Form_Name, Form_URL, requires_staff, staff_contact_id || null, Form_Target_User_Type]
         );
-        res.status(201).json({ message: "Form created", user: { id: result.insertId.toString(), name, url, requirement, contact, type }});
+        res.status(201).json({ message: "Form created", user: { id: result.insertId.toString(), Form_Name, Form_URL, requires_staff, staff_contact_id, Form_Target_User_Type }});
     // Catch any errors and display error message
     } catch (err) {
         console.error(`Error creating form:`, err);
@@ -85,19 +85,19 @@ router.put('/forms/:id', authenticate, requireAdmin, async (req, res) => {
     try {
         connection = await db.getConnection();
         const formId = req.params.id;
-        const { name, url, requirement, contact, type, updated } = req.body;
+        const { Form_Name, Form_URL, requires_staff, staff_contact_id, Form_Target_User_Type } = req.body;
         // Input validation
-        if (!name || name.trim() === "" || !url || url.trim() == "") {
+        if (!Form_Name || Form_Name.trim() === "" || !Form_URL || Form_URL.trim() == "") {
             return res.status(400).json({ error: "Missing or empty question, answer, or category" });
         }
         // Query by Form ID and update information
         const result = await connection.query(
             `UPDATE Forms
-            SET Form_Name = ?, Form_URL = ?, requires_staff = ?, staff_contact_id = ?, Form_Target_User_Type = ?, Form_last_updated = ?
+            SET Form_Name = ?, Form_URL = ?, requires_staff = ?, staff_contact_id = ?, Form_Target_User_Type = ?
             WHERE Form_ID = ?`,
-            [name, url, requirement, contact, type, updated, formId]
+            [Form_Name, Form_URL, requires_staff, staff_contact_id || null, Form_Target_User_Type, formId]
         );
-        res.status(200).json({ message: `Form with ID ${formId} updated`, updatedForm: { id: formId, name, url, requirement, contact, type, updated }});
+        res.status(200).json({ message: `Form with ID ${formId} updated`, updatedForm: { id: formId, Form_Name, Form_URL, requires_staff, staff_contact_id, Form_Target_User_Type }});
     // Catch any errors and display error message
     } catch (err) {
         console.error(`Error updating form:`, err);
