@@ -1,3 +1,8 @@
+// ========================================================
+// File description: Defines CRUD operations for the
+// users table
+// ========================================================
+
 // Import required modules
 const express = require('express');
 const router = express.Router();
@@ -6,19 +11,19 @@ const bcrypt = require('bcrypt');
 const { authenticate } = require("../middleware/authMiddleware");
 const { requireAdmin } = require("../middleware/roleMiddleware");
 
-// Define a route for GET requests for users by ID
-router.get('/users/:id', authenticate, requireAdmin, async (req, res) => {
+// Safe fields to return to frontend
+const PUBLIC_FIELDS = `
+  User_ID, Full_Name, User_Name, User_Email, User_Phone,
+  User_Role, User_Type
+`;
+
+// Define a route for GET requests for users
+router.get('/users', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
         connection = await db.getConnection();
-        const userId = req.params.id;
-        // Query by User ID
-        const result = await connection.query(
-            `SELECT *
-            FROM Users
-            WHERE User_ID = ?`,
-            [userId]
-        );
+        // Query all users
+        const result = await connection.query(`SELECT ${PUBLIC_FIELDS} FROM Users`);
         res.status(200).json(result);
     // Catch any errors and display error message
     } catch (err) {
@@ -29,17 +34,21 @@ router.get('/users/:id', authenticate, requireAdmin, async (req, res) => {
     }
 });
 
-// Define a route for GET requests for users
-router.get('/users', authenticate, requireAdmin, async (req, res) => {
+// Define a route for GET requests for users by ID
+router.get('/users/:id', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
         connection = await db.getConnection();
-        // Query all users
+        const User_ID = req.params.id;
+        // Query by User ID
         const result = await connection.query(
-            `SELECT *
-            FROM Users`
+          `SELECT ${PUBLIC_FIELDS} FROM Users WHERE User_ID = ?`,
+          [User_ID]
         );
-        res.status(200).json(result);
+        if (!result || result.length === 0) {
+          return res.status(404).json({ error: "User not found" });
+        }
+        res.status(200).json(result[0]);
     // Catch any errors and display error message
     } catch (err) {
         console.error(`Error fetching user:`, err);
@@ -53,19 +62,35 @@ router.get('/users', authenticate, requireAdmin, async (req, res) => {
 router.post('/users', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
-        const { name, username, email, phone, password, token, expires, role, type } = req.body;
+        const { Full_Name, User_Name, User_Email, User_Phone, User_Password, User_Role, User_Type } = req.body;
         // Input validation
-        if (!name || name.trim() == "" || !username || username.trim() == "" || !email || email.trim() == "") {
-            return res.status(400).json({ error: "Missing or empty request" });
+        if (!Full_Name || !User_Email) {
+          return res.status(400).json({ error: "Full name and email are required." });
         }
+        // Admins must have both username & password
+        if (User_Role === "Admin") {
+          if (!User_Name || !User_Password) {
+            return res.status(400).json({ error: "Admin accounts must have a username and password." });
+          }
+        }
+        // Non-admins username allowed to be NULL
+        const finalUsername = (User_Role === "Admin") ? User_Name : null;
         connection = await db.getConnection();
+        let hashedPassword = null;
+        const saltRounds = 12;
+    	  if (User_Password && User_Password.trim() !== "") {
+          if (User_Password.length < 8) {
+            return res.status(400).json({ error: "Password must be at least 8 characters." });
+          }
+          hashedPassword = await bcrypt.hash(User_Password, saltRounds);
+        }
         // Input relevant information and create user
         const result = await connection.query(
-            `INSERT INTO Users (Full_Name, User_Name, User_Email, User_Phone, User_Password, Password_Reset_Token, Password_Reset_Expires, User_Role, User_Type)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [name, username, email, phone, password, token, expires, role, type]
+            `INSERT INTO Users (Full_Name, User_Name, User_Email, User_Phone, User_Password, User_Role, User_Type)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [Full_Name, finalUsername, User_Email, User_Phone || null, hashedPassword, User_Role || "User", User_Type || null]
         );
-        res.status(201).json({ message: "User created", user: { id: result.insertId.toString(), name, username, email, phone, password, token, expires, role, type }});
+        res.status(201).json({ message: "User created successfully.", user: { User_ID: result.insertId.toString(), Full_Name, User_Name: finalUsername, User_Email, User_Phone, User_Role, User_Type }});
     // Catch any errors and display error message
     } catch (err) {
         console.error(`Error creating user:`, err);
@@ -76,36 +101,40 @@ router.post('/users', authenticate, requireAdmin, async (req, res) => {
 });
 
 // Define a route for PUT requests for users
-router.put("/users/:id", authenticate, async (req, res) => {
+router.put('/users/:id', authenticate, requireAdmin, async (req, res) => {
   let connection;
   try {
-    const userId = req.params.id;
-    const { name, username, email, phone, password, token, expires, role, type } = req.body;
+    const User_ID = req.params.id;
+    const { Full_Name, User_Name, User_Email, User_Phone, User_Password, User_Role, User_Type } = req.body;
     // Input validation
-    if (!name || name.trim() == "" || !username || username.trim() == "" || !email || email.trim() == "") {
-        return res.status(400).json({ error: "Missing or empty request" });
+    if (!Full_Name || !User_Email) {
+      return res.status(400).json({ error: "Full name and email are required." });
     }
+    // Non-admins username allowed to be NULL
+    const finalUsername = User_Role === "Admin" ? User_Name : null;
     connection = await db.getConnection();
     // Only hash the password if it's provided (avoid overwriting existing hash)
     let hashedPassword = null;
-    if (password) {
-      const saltRounds = 12;
-      hashedPassword = await bcrypt.hash(password, saltRounds);
+    const saltRounds = 12;
+    if (User_Password && User_Password.trim() !== "") {
+      if (User_Password.length < 8) {
+        return res.status(400).json({ error: "Password must be at least 8 characters." });
+      }
+      hashedPassword = await bcrypt.hash(User_Password, saltRounds);
     }
-    // Query by log ID and update information
+    // Query by user ID and update information
     const result = await connection.query(
       `UPDATE Users
-       SET Full_Name = ?, User_Name = ?, User_Email = ?, User_Phone = ?, User_Password = COALESCE(?, User_Password), Password_Reset_Token = ?, Password_Reset_Expires = ?, User_Role = ?, User_Type = ?
+       SET Full_Name = ?, User_Name = ?, User_Email = ?, User_Phone = ?, User_Password = COALESCE(?, User_Password), User_Role = ?, User_Type = ?
        WHERE User_ID = ?`,
-      [name, username, email, phone, hashedPassword, token, expires, role, type, userId]
+      [Full_Name, finalUsername, User_Email, User_Phone || null, hashedPassword, User_Role || "User", User_Type || null, User_ID]
     );
-    // MariaDB returns info on affected rows, not updated data
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: `User ID ${userId} not found` });
+    if (!result || result.affectedRows === 0) {
+      return res.status(404).json({ error: `User_ID ${User_ID} not found` });
     }
     res.status(200).json({
-      message: `User with ID ${userId} updated successfully`,
-      updatedUser: { id: userId, name, username, email, phone, role, type }});
+      message: `User with ID ${User_ID} updated successfully`,
+      updatedUser: { id: User_ID, Full_Name, User_Name: finalUsername, User_Email, User_Phone, User_Role: User_Role || "User", User_Type: User_Type || null }});
     // Catch any errors and display error message
   } catch (err) {
     console.error("Error updating user:", err);
@@ -119,15 +148,17 @@ router.put("/users/:id", authenticate, async (req, res) => {
 router.delete('/users/:id', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
-        connection = await db.getConnection();
-        const userId = req.params.id;
-        // Query by User ID and delete user
-        const result = await connection.query(
-            `DELETE FROM Users
-            WHERE User_ID = ?`,
-            [userId]
-        );
-        res.status(200).json({ message: `User deleted` });
+      connection = await db.getConnection();
+      const User_ID = req.params.id;
+      // Query by User ID and delete user
+      const result = await connection.query(
+        `DELETE FROM Users WHERE User_ID = ?`,
+        [User_ID]
+      );
+      if (!result || result.affectedRows === 0) {
+        return res.status(404).json({ error: `User_ID ${User_ID} not found` });
+      }
+      res.status(200).json({ message: `User deleted` });
     // Catch any errors and display error message
     } catch (err) {
         console.error('Error deleting user:', err);
