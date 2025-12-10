@@ -1,3 +1,8 @@
+// ========================================================
+// File description: Defines CRUD operations for the
+// FAQs table
+// ========================================================
+
 // Import required modules
 const express = require('express');
 const router = express.Router();
@@ -6,20 +11,20 @@ const {authenticate} = require('../middleware/authMiddleware');
 const { requireAdmin } = require('../middleware/roleMiddleware');
 
 // Define a route for GET requests with optional category filter
-router.get('/faqs', async (req, res) => {
+router.get('/faqs', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
         connection = await db.getConnection();
-        const { category } = req.query;
+        const { Category_Name } = req.query;
         let result;
         // If category is not NULL, filter by category
-        if (category) {
+        if (Category_Name) {
             result = await connection.query(
                 `SELECT *
                 FROM FAQs
                 INNER JOIN Categories ON FAQs.FAQ_Category_ID = Categories.Category_ID
                 WHERE Categories.Category_Name = ?`,
-                [category]
+                [Category_Name]
             );
         // If category is NULL, return all FAQs
         } else {
@@ -42,9 +47,9 @@ router.get('/faqs', async (req, res) => {
 router.post('/faqs', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
-        const { question, answer, category, form, contact, user_type } = req.body;
+        const { Question, Answer, FAQ_Category_ID, FAQ_Form_ID, Escalation_contact_ID, Target_User_Type } = req.body;
         // Input validation
-        if (!question || question.trim() === "" || !answer || answer.trim() == "" || !category || category.trim() == "") {
+        if (!Question || Question.trim() === "" || !Answer || Answer.trim() == "") {
             return res.status(400).json({ error: "Missing or empty question, answer, or category" });
         }
         connection = await db.getConnection();
@@ -52,9 +57,9 @@ router.post('/faqs', authenticate, requireAdmin, async (req, res) => {
         const result = await connection.query(
             `INSERT INTO FAQs (Question, Answer, FAQ_Category_ID, FAQ_Form_ID, Escalation_contact_ID, Target_User_Type, FAQ_last_updated)
             VALUES (?, ?, ?, ?, ?, ?, NOW())`,
-            [question, answer, category, form || null, contact || null, user_type || null]
+            [Question, Answer, FAQ_Category_ID, FAQ_Form_ID || null, Escalation_contact_ID || null, Target_User_Type || null]
         );
-        res.status(201).json({ message: "FAQ created", faq: { id: result.insertId.toString(), question, answer, category, form, contact, user_type }});
+        res.status(201).json({ message: "FAQ created", faq: { id: result.insertId.toString(), Question, Answer, FAQ_Category_ID, FAQ_Form_ID, Escalation_contact_ID, Target_User_Type }});
     // Catch any errors and display error message
     } catch (err) {
         console.error("Error creating FAQ:", err);
@@ -70,9 +75,9 @@ router.put('/faqs/:id', authenticate, requireAdmin, async (req, res) => {
     try {
         connection = await db.getConnection();
         const faqId = req.params.id;
-        const { question, answer, category, form, contact, user_type } = req.body;
+        const { Question, Answer, FAQ_Category_ID, FAQ_Form_ID, Escalation_contact_ID, Target_User_Type } = req.body;
         // Input validation
-        if (!question || question.trim() === "" || !answer || answer.trim() == "" || !category || category.trim() == "") {
+        if (!Question || Question.trim() === "" || !Answer || Answer.trim() == "") {
             return res.status(400).json({ error: "Missing or empty question, answer, or category" });
         }
         // Query by FAQ ID and update information
@@ -80,9 +85,9 @@ router.put('/faqs/:id', authenticate, requireAdmin, async (req, res) => {
             `UPDATE FAQs 
             SET Question = ?, Answer = ?, FAQ_Category_ID = ?, FAQ_Form_ID = ?, Escalation_contact_ID = ?, Target_User_Type = ?
             WHERE FAQ_ID = ?`,
-            [question, answer, category, form, contact, user_type, faqId]
+            [Question, Answer,FAQ_Category_ID, FAQ_Form_ID || null, Escalation_contact_ID || null, Target_User_Type, faqId]
         );
-        res.status(200).json({ message: `FAQ with ID ${faqId} updated`, updatedFaq: { faqId, question, answer, category, form, contact, user_type }});
+        res.status(200).json({ message: `FAQ with ID ${faqId} updated`, updatedFaq: { faqId, Question, Answer, FAQ_Category_ID, FAQ_Form_ID, Escalation_contact_ID, Target_User_Type }});
     // Catch any errors and display error message
     } catch (err) {
         console.error(`Error updating FAQ:`, err);
