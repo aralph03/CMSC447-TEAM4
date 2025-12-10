@@ -1,3 +1,8 @@
+// ========================================================
+// File description: Defines CRUD operations for the
+// categories table
+// ========================================================
+
 // Import required modules
 const express = require('express');
 const router = express.Router();
@@ -10,7 +15,7 @@ router.get('/categories/:id', async (req, res) => {
     let connection;
     try {
         connection = await db.getConnection();
-        catId = req.params.id;
+        const catId = req.params.id;
         // Query category by ID
         const result = await connection.query(
             `SELECT *
@@ -52,9 +57,9 @@ router.get('/categories', async (req, res) => {
 router.post('/categories', authenticate, requireAdmin, async (req, res) => {
     let connection;
     try {
-        const { name } = req.body;
+        const { Category_Name } = req.body;
         // Input validation
-        if (!name || name.trim() === "") {
+        if (!Category_Name || Category_Name.trim() === "") {
             return res.status(400).json({ error: "Missing or empty name" });
         }
         connection = await db.getConnection();
@@ -62,9 +67,9 @@ router.post('/categories', authenticate, requireAdmin, async (req, res) => {
         const result = await connection.query(
             `INSERT INTO Categories (Category_Name)
             VALUES (?)`,
-            [name]
+            [Category_Name]
         );
-        res.status(201).json({ message: "Category created", category: { id: result.insertId.toString(), name }});
+        res.status(201).json({ message: "Category created", category: { id: result.insertId.toString(), Category_Name }});
     // Catch any errors and display error message
     } catch (err) {
         console.error(`Error creating category:`, err);
@@ -80,9 +85,9 @@ router.put('/categories/:id', authenticate, requireAdmin, async (req, res) => {
     try {
         connection = await db.getConnection();
         const catId = req.params.id;
-        const { name } = req.body;
+        const { Category_Name } = req.body;
         // Input validation
-        if (!name || name.trim() === "") {
+        if (!Category_Name || Category_Name.trim() === "") {
             return res.status(400).json({ error: "Missing or empty name" });
         }
         // Query by category ID and update with new name
@@ -90,9 +95,9 @@ router.put('/categories/:id', authenticate, requireAdmin, async (req, res) => {
             `UPDATE Categories 
             SET Category_Name = ?
             WHERE Category_ID = ?`,
-            [name, catId]
+            [Category_Name, catId]
         );
-        res.status(200).json({ message: `Category with ID ${catId} updated`, updatedCat: { id: catId, name }});
+        res.status(200).json({ message: `Category with ID ${catId} updated`, updatedCat: { id: catId, Category_Name }});
     // Catch any errors and display error message
     } catch (err) {
         console.error(`Error updating category:`, err);
