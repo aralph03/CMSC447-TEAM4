@@ -17,7 +17,7 @@ CREATE TABLE Categories (
 CREATE TABLE Users (
   User_ID INT AUTO_INCREMENT PRIMARY KEY,          -- Unique identifier for each user
   Full_Name VARCHAR(150) NOT NULL,                 -- First + Last name
-  User_Name VARCHAR(100) NOT NULL UNIQUE,          -- Unique login handle
+  User_Name VARCHAR(100) UNIQUE DEFAULT NULL,      -- Unique login handle
   User_Email VARCHAR(255) NOT NULL UNIQUE,         -- Email must be unique
   User_Phone VARCHAR(20) DEFAULT NULL,             -- Phone contact (required for Admins, optional for Users)
   User_Password VARCHAR(255) DEFAULT NULL,             -- Store HASHED password, not plain text
@@ -92,7 +92,7 @@ CREATE TABLE Logs (
   FAQ_ID INT NULL,                                 -- FK → FAQs (optional, for analytics)
   Query TEXT NOT NULL,                             -- The actual user question
   Response TEXT,                                   -- The chatbot/system response
-  Status ENUM('Answered','Escalated','No answer') NOT NULL,
+  Status ENUM('ANSWERED_PHASE1','FAILED_PHASE1','ANSWERED_PHASE2', 'ESCALATED') NOT NULL,
                                                    -- Tracks how query was handled
   Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   -- When the query occurred
   -- Relationships
