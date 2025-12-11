@@ -1,0 +1,146 @@
+/* =====================================================
+   UMBC THEME GLOBAL COLORS
+   ===================================================== */
+:root {
+  --umbc-gold: #fdb515;
+  --umbc-black: #000000;
+  --border-light: #dcdcdc;
+  --umbc-white: #ffffff;
+  --gray-bg: #cccccc;
+  --umbc-dark-gray: #303030;
+}
+
+/* main wrapper for entire structure */
+.chatbot-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-bg);
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: "Inter-bold", Helvetica, sans-serif;
+}
+
+.chatbot-header {
+  background: var(--umbc-black);
+  color: var(--umbc-gold);
+  padding: 16px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  border-bottom: 2px solid var(--border-light);
+  border-radius: 12px 12px 0 0;
+}
+
+.chatbot-container {
+  width: 650px;
+  height: 80vh;
+  background: var(--umbc-white);
+  border: 2px solid var(--umbc-dark-gray);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.chat-window {
+  flex: 1;
+  padding: 24px 16px 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--umbc-white);
+}
+
+.chat-window::-webkit-scrollbar {
+  width: 8px;
+}
+.chat-window::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+/* styling for selectable category buttons */
+.category-button {
+  padding: 8px 12px;
+  background: var(--umbc-black);
+  color: var(--umbc-gold);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+  margin: 4px 2px;
+}
+
+.category-button:hover {
+  background: var(--umbc-dark-gray);
+}
+
+/* styling for selectable escalate button */
+.escalate-button {
+  padding: 8px 12px;
+  background: #ff4444;
+  color: var(--umbc-white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+.escalate-button:hover {
+  background: #cc0000;
+}
+
+/* chat user and bot text bubbles */
+.chat-bubble {
+  padding: 12px 16px;
+  border-radius: 10px;
+  max-width: 80%;
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+.chat-bubble.user {
+  background: var(--umbc-gold);
+  color: black;
+  border: 1px solid #c7c8ca;
+  align-self: flex-end;
+}
+
+.chat-bubble.bot {
+  background: #c7c8ca;
+  color: black;
+  border: 1px solid var(--umbc-dark-gray);
+  align-self: flex-start;
+}
+
+.chat-input-bar {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background: var(--umbc-white);
+}
+
+.chat-input-bar input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.chat-input-bar button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  background: var(--umbc-gold);
+  color: black;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
