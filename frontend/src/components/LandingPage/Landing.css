@@ -1,0 +1,52 @@
+/* =====================================================
+   UMBC THEME GLOBAL COLORS
+   ===================================================== */
+:root {
+  --umbc-gold: #fdb515;
+  --umbc-black: #000000;
+  --border-light: #dcdcdc;
+  --umbc-white: #ffffff;
+  --gray-bg: #cccccc;
+  --umbc-dark-gray: #303030;
+}
+
+/* whole landing page container */
+.landing-container {
+  background: var(--umbc-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Inter-bold", Helvetica, sans-serif;
+}
+
+.landing-banner {
+  width: 100%;
+  height: 100px;               
+  background-image: url("../../assets/header.png");
+}
+
+.landing-content {
+  padding: 100px;
+  text-align: center;
+}
+
+/* alignment of the buttons */
+.landing-buttons {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* design of buttons themselves */
+.landing-btn {
+  background-color: var(--umbc-gold);
+  color: var(--umbc-black);
+  padding: 12px 26px;
+  font-size: 20px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 2px solid;
+}

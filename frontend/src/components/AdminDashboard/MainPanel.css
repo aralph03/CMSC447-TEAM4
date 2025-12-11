@@ -1,0 +1,240 @@
+/* =====================================================
+   UMBC THEME GLOBAL COLORS
+   ===================================================== */
+:root {
+  --umbc-gold: #fdb515;
+  --umbc-black: #000000;
+  --border-light: #dcdcdc;
+  --umbc-white: #ffffff;
+  --gray-bg: #cccccc;
+  --umbc-dark-gray: #303030;
+}
+
+/* removes padding globally */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* main container for dynamic content */
+.main-panel-container {
+  flex: 1;
+  background-color: var(--umbc-white);
+  color: var(--umbc-black);
+  overflow-y: auto;
+  min-height: 100%;
+  font-family: "Inter-bold", Helvetica, sans-serif;
+  padding: 20px 30px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* collapsed sidebar */
+.main-panel-container.collapsed {
+  margin-left: 0;
+}
+
+/* header image design */
+.main-panel-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 25px;
+  border-radius: 6px;
+  object-fit: cover; 
+}
+
+/* welcome screen for home */
+.welcome-panel {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.welcome-panel h2 {
+  color: var(--umbc-gold);
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-family: "Inter-Bold", Helvetica, sans-serif;
+}
+
+.welcome-panel p {
+  color: var(--gray-bg);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* panel titles */
+.panel-title {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--umbc-black);
+  border-left: 8px solid var(--umbc-gold);
+  padding-left: 12px;
+  font-family: "Inter-Bold", Helvetica, sans-serif;
+}
+
+/* search bar */
+.search-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: "Inter-bold", Helvetica, sans-serif;
+}
+
+/* buttons */
+.btn {
+  border-radius: 6px;
+  border: 1px solid;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+  font-family: "Inter-bold", Helvetica, sans-serif;
+  padding: 5px 8px;
+  line-height: 1;
+  font-weight: bold;
+  margin-right: 2px;
+}
+
+.btn-gold {
+  background-color: var(--umbc-gold);
+  color: var(--umbc-black);
+  font-weight: bold;
+}
+
+.btn-gold:hover {
+  opacity: 0.9;
+}
+
+.btn-dark {
+  background-color: var(--umbc-black);
+  color: var(--umbc-white);
+}
+
+.btn-dark:hover {
+  opacity: 0.85;
+}
+
+.btn-danger {
+  background-color: #b00020;
+  color: var(--umbc-white);
+}
+
+.btn-danger:hover {
+  background-color: #8a0018;
+}
+
+.add-btn {
+  margin-left: auto;
+}
+
+/* admin table styling */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-light);
+  background: var(--umbc-white);
+  border-radius: 6px;
+  overflow: hidden;
+  table-layout: fixed; 
+}
+
+.data-table th,
+.data-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: left;
+  font-family: "Inter-bold", Helvetica, sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.data-table th {
+  background: var(--umbc-black);
+  color: var(--umbc-white);
+  font-weight: 600;
+}
+
+.data-table tr:nth-child(even) {
+  background: var(--gray-bg);
+}
+
+.data-table tr:hover {
+  background: #eeeeee;
+}
+
+/* pagination styling */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 12px;
+}
+
+.page-number {
+  font-weight: bold;
+  color: var(--umbc-black);
+}
+
+/* modal styling */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+}
+
+.modal-container {
+  width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--umbc-white);
+  padding: 25px;
+  border-radius: 10px;
+  border: 3px solid var(--umbc-gold);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+.modal-container h3 {
+  border-left: 6px solid var(--umbc-gold);
+  padding-left: 10px;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+/* modal inputs */
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+}
+
+/* modal buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
