@@ -1,0 +1,81 @@
+/* =====================================================
+   UMBC THEME GLOBAL COLORS
+   ===================================================== */
+:root {
+  --umbc-gold: #fdb515;
+  --umbc-black: #000000;
+  --border-light: #dcdcdc;
+  --umbc-white: #ffffff;
+  --gray-bg: #cccccc;
+  --umbc-dark-gray: #303030;
+}
+
+/* wrapper for entire login page */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--gray-bg);
+  padding: 60px;
+  font-family: "Inter-bold", Helvetica, sans-serif;
+  background-image: url("../../assets/background.png");
+}
+
+.login-wrapper form {
+  background: var(--umbc-white);
+  padding: 50px 50px;
+  border-radius: 10px;
+  max-width: 520px;
+}
+
+/* h1 title */
+.login-wrapper form h1 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: var(--umbc-black);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* inputs */
+.login-wrapper input {
+  width: 100%;
+  padding: 14px 12px;
+  margin-bottom: 18px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.login-wrapper label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Submit button */
+.login-wrapper button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--umbc-gold);
+  color: var(--umbc-black);
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.forgot-password {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.forgot-password a {
+  color: var(--umbc-gold);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
