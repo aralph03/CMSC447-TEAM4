@@ -1,0 +1,140 @@
+/* =====================================================
+   UMBC THEME GLOBAL COLORS
+   ===================================================== */
+:root {
+  --umbc-gold: #fdb515;
+  --umbc-black: #000000;
+  --border-light: #dcdcdc;
+  --umbc-white: #ffffff;
+  --gray-bg: #cccccc;
+  --umbc-dark-gray: #303030;
+}
+
+/* Layout container fills the screen */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* button */
+.button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 10px;              
+  background: var(--umbc-dark-gray);
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;       
+}
+
+.button .icon {
+  width: 22px;            
+  height: 18px;               
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.button .first {
+  height: 3px;
+  background: var(--umbc-white);
+  border-radius: 2px;        
+  transition: all 0.3s ease;
+}
+
+.button .second {
+  height: 3px;
+  background: var(--umbc-white);
+  border-radius: 2px;        
+  transition: all 0.3s ease;
+}
+
+.button .third {
+  height: 3px;
+  background: var(--umbc-white);
+  border-radius: 2px;        
+  transition: all 0.3s ease;
+}
+
+/* covers the screen when the sidebar is closed */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 50;
+}
+
+/* covers the screen when the sidebar is open */
+.overlay.show {
+  opacity: 1;
+}
+
+/* sidebar */
+.sidebar {
+  font-family: "Inter-bold", Helvetica, sans-serif;
+  position: fixed;
+  top: 0;
+  left: -300px; 
+  width: 200px;
+  height: 100%;
+  background: #242424;
+  color: var(--umbc-gold);
+  padding: 20px;
+  padding-top: 60px;
+  transition: left 0.3s ease;
+  z-index: 75;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-nav a {
+  display: block;
+  color: var(--umbc-gold);
+  text-decoration: none;
+  padding: 10px;
+}
+
+.sidebar-nav a:hover {
+  text-decoration: underline;
+}
+
+.sidebar-button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  text-align: left;
+  width: 100%;
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--umbc-white);
+}
+
+/* logout */
+.logout-btn {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  padding-top: 300px;
+  padding-left: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--umbc-gold);
+  font-family: "Inter-bold", Helvetica, sans-serif;
+  border-radius: 2px;
+  transition: all 0.3s ease;            
+}
+
+.logout-btn:hover {
+  text-decoration: underline;
+}
